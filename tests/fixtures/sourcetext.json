@@ -1,0 +1,30 @@
+{
+  "key.offset": 0,
+  "key.length": 14,
+  "key.diagnostic_stage": "source.diagnostic.stage.swift.parse",
+  "key.syntaxmap": [
+    {
+      "key.kind": "source.lang.swift.syntaxtype.keyword",
+      "key.offset": 0,
+      "key.length": 6
+    },
+    {
+      "key.kind": "source.lang.swift.syntaxtype.identifier",
+      "key.offset": 7,
+      "key.length": 3
+    }
+  ],
+  "key.substructure": [
+    {
+      "key.kind": "source.lang.swift.decl.struct",
+      "key.accessibility": "source.lang.swift.accessibility.internal",
+      "key.name": "Foo",
+      "key.offset": 0,
+      "key.length": 13,
+      "key.nameoffset": 7,
+      "key.namelength": 3,
+      "key.bodyoffset": 12,
+      "key.bodylength": 0
+    }
+  ]
+}

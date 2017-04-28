@@ -32,6 +32,12 @@ class TestSourceKit(unittest.TestCase):
         self.assertEqual(out, open("tests/fixtures/valid.json").read())
         self.assertEqual(err, "")
 
+    def test_text_request(self):
+        code, out, err = run_command("tests/fixtures/valid_text_request.yaml")
+        self.assertEqual(code, 0)
+        self.assertEqual(out, open("tests/fixtures/sourcetext.json").read())
+        self.assertEqual(err, "")
+
     def test_empty_argument(self):
         code, out, err = run_command("")
         self.assertEqual(code, 1)
