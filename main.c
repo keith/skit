@@ -61,14 +61,14 @@ int perform_sourcekit_request_from_yamlfile(char *filepath) {
   char *yaml = copy_file_contents(filepath);
   char *error = NULL;
   sourcekitd_object_t request =
-    sourcekitd_request_create_from_yaml(yaml, &error);
+      sourcekitd_request_create_from_yaml(yaml, &error);
   free(yaml);
 
   if (!request) {
     if (error) {
       fprintf(stderr,
-          "Got an error from sourcekitd when creating yaml request: %s\n",
-          error);
+              "Got an error from sourcekitd when creating yaml request: %s\n",
+              error);
       free(error);
     } else {
       fprintf(stderr, "sourcekitd failed to create request silently\n");
@@ -80,7 +80,7 @@ int perform_sourcekit_request_from_yamlfile(char *filepath) {
   sourcekitd_response_t response = sourcekitd_send_request_sync(request);
   if (sourcekitd_response_is_error(response)) {
     fprintf(stderr, "Got an error from sourcekitd: %s\n",
-        error_from_response(response));
+            error_from_response(response));
     sourcekitd_response_dispose(response);
 
     return 1;

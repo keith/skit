@@ -49,3 +49,13 @@ clean:
 .PHONY: test
 test: $(EXECUTABLE)
 	python -m unittest discover -s tests
+
+.PHONY: format
+format: $(SRCS)
+	clang-format -i $(SRCS)
+
+.PHONY: check-format
+check-format: $(SRCS)
+	@which clang-format
+	set -o pipefail; ! clang-format -output-replacements-xml $(SRCS) \
+		| grep "<replacement "
