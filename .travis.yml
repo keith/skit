@@ -1,0 +1,10 @@
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode8.3
+      language: objective-c
+      script: make test
+    - sudo: required
+      services: docker
+      before_install: docker build -t skit .
+      script: docker run -it skit make test
