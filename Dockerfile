@@ -1,4 +1,4 @@
-FROM norionomura/sourcekit:31
+FROM norionomura/sourcekit:311
 
 RUN apt-get -y update && apt-get -y install build-essential clang
 
