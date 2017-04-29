@@ -1,6 +1,7 @@
 #include <sourcekitd/sourcekitd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 char *copy_file_contents(char *path);
@@ -98,8 +99,13 @@ int perform_sourcekit_request_from_yamlfile(char *filepath) {
 
 int main(int argc, char **argv) {
   if (argc != 2) {
-    fprintf(stderr, "Usage: skit YAMLFILE\n");
+    fprintf(stderr, "Usage: skit [YAMLFILE|-v|--version]\n");
     return 1;
+  }
+
+  if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+    printf("0.1.2\n");
+    return 0;
   }
 
   char *filepath = argv[1];
