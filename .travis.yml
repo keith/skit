@@ -4,6 +4,9 @@ matrix:
       osx_image: xcode8.3
       language: objective-c
       script: make test
+    - os: osx
+      install: HOMEBREW_NO_AUTO_UPDATE=1 brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/fb4429fa4b75db8e4c4fe925e26d8a23ed8e6fb6/Formula/clang-format.rb
+      script: make check-format
     - sudo: required
       services: docker
       before_install: docker build -t skit .
