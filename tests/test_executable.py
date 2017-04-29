@@ -48,4 +48,22 @@ class TestSourceKit(unittest.TestCase):
         code, out, err = run_command(None)
         self.assertEqual(code, 1)
         self.assertEqual(out, "")
-        self.assertEqual(err, "Usage: skit YAMLFILE\n")
+        self.assertEqual(err, "Usage: skit [YAMLFILE|-v|--version]\n")
+
+    def test_invalid_flag(self):
+        code, out, err = run_command("--versionfoobar")
+        self.assertEqual(code, 1)
+        self.assertEqual(out, "")
+        self.assertEqual(err, "No readable file exists at '--versionfoobar'\n")
+
+    def test_version_command(self):
+        code, out, err = run_command("--version")
+        self.assertEqual(code, 0)
+        self.assertRegexpMatches(out, r"\d+\.\d+\.\d+")
+        self.assertEqual(err, "")
+
+    def test_short_version_command(self):
+        code, out, err = run_command("-v")
+        self.assertEqual(code, 0)
+        self.assertRegexpMatches(out, r"\d+\.\d+\.\d+")
+        self.assertEqual(err, "")
