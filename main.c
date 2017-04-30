@@ -1,16 +1,16 @@
-#include <sourcekitd/sourcekitd.h>
+#include "filesystem.h"
+#include "library.h"
+#include "sourcekitd/sourcekitd.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
-char *copy_file_contents(char *path);
 char *error_from_response(sourcekitd_response_t resp);
-int file_readable(char *path);
 int perform_sourcekit_request_from_yamlfile(char *filepath);
 
 char *error_from_response(sourcekitd_response_t resp) {
-  switch (sourcekitd_response_error_get_kind(resp)) {
+  switch (skit_sourcekitd_response_error_get_kind(resp)) {
     case SOURCEKITD_ERROR_CONNECTION_INTERRUPTED:
       return "connection interrupted";
     case SOURCEKITD_ERROR_REQUEST_INVALID:
@@ -22,47 +22,11 @@ char *error_from_response(sourcekitd_response_t resp) {
   }
 }
 
-int file_readable(char *path) {
-  return access(path, R_OK) == 0;
-}
-
-char *copy_file_contents(char *path) {
-  FILE *fp = fopen(path, "r");
-  if (!fp) {
-    fclose(fp);
-    fprintf(stderr, "Failed to open file at '%s'\n", path);
-    exit(1);
-  }
-
-  fseek(fp, 0, SEEK_END);
-  long size = ftell(fp);
-  rewind(fp);
-  char *buffer = malloc((unsigned long)size + 1);
-  if (!buffer) {
-    fclose(fp);
-
-    fprintf(stderr, "Failed to allocate memory for reading '%s'\n", path);
-    exit(1);
-  }
-
-  if (!fread(buffer, (size_t)size, 1, fp)) {
-    fclose(fp);
-    free(buffer);
-
-    fprintf(stderr, "Failed to read file '%s'\n", path);
-    exit(1);
-  }
-
-  fclose(fp);
-  buffer[size] = '\0';
-  return buffer;
-}
-
 int perform_sourcekit_request_from_yamlfile(char *filepath) {
   char *yaml = copy_file_contents(filepath);
   char *error = NULL;
   sourcekitd_object_t request =
-      sourcekitd_request_create_from_yaml(yaml, &error);
+      skit_sourcekitd_request_create_from_yaml(yaml, &error);
   free(yaml);
 
   if (!request) {
@@ -78,20 +42,20 @@ int perform_sourcekit_request_from_yamlfile(char *filepath) {
     return 1;
   }
 
-  sourcekitd_response_t response = sourcekitd_send_request_sync(request);
-  if (sourcekitd_response_is_error(response)) {
+  sourcekitd_response_t response = skit_sourcekitd_send_request_sync(request);
+  if (skit_sourcekitd_response_is_error(response)) {
     fprintf(stderr, "Got an error from sourcekitd: %s\n",
             error_from_response(response));
-    sourcekitd_response_dispose(response);
+    skit_sourcekitd_response_dispose(response);
 
     return 1;
   }
 
-  sourcekitd_variant_t value = sourcekitd_response_get_value(response);
-  char *json = sourcekitd_variant_json_description_copy(value);
+  sourcekitd_variant_t value = skit_sourcekitd_response_get_value(response);
+  char *json = skit_sourcekitd_variant_json_description_copy(value);
   printf("%s\n", json);
 
-  sourcekitd_response_dispose(response);
+  skit_sourcekitd_response_dispose(response);
   free(json);
 
   return 0;
@@ -114,9 +78,10 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  sourcekitd_initialize();
+  load_sourcekit_symbols();
+  skit_sourcekitd_initialize();
   int result = perform_sourcekit_request_from_yamlfile(filepath);
-  sourcekitd_shutdown();
+  skit_sourcekitd_shutdown();
 
   return result;
 }

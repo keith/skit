@@ -2,17 +2,10 @@ CC := clang
 CFLAGS ?= -Weverything -I.
 
 ifeq ($(shell uname),Darwin)
-XCODE_PATH ?= $(shell xcode-select -p)
-SOURCEKIT_DIRECTORY ?= $(XCODE_PATH)/Toolchains/XcodeDefault.xctoolchain/usr/lib/
-CFLAGS += -F$(SOURCEKIT_DIRECTORY)
-LDFLAGS ?= -Wl,-rpath,$(SOURCEKIT_DIRECTORY) -framework sourcekitd
+LDFLAGS ?=
 else
-SOURCEKIT_DIRECTORY ?= /usr/lib
-LDFLAGS ?= -Wl,-rpath,$(SOURCEKIT_DIRECTORY),-rpath,/usr/lib/swift/linux,-PIC \
-		   -L$(SOURCEKIT_DIRECTORY) -L/usr/lib/swift/linux \
-		   -l sourcekitdInProc -l swiftCore
+LDFLAGS ?= -Wl,-PIC,-ldl,-rpath,/usr/lib/swift/linux,-lswiftCore,-L/usr/lib/swift/linux
 endif
-
 
 EXECUTABLE ?= skit
 OTHER_CFLAGS ?= -g
