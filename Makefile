@@ -18,11 +18,11 @@ EXECUTABLE ?= skit
 OTHER_CFLAGS ?= -g
 PREFIX ?= /usr/local/bin
 
-HEADERS = $(wildcard *.h) $(wildcard */*.h)
-SRCS = $(wildcard *.c) $(wildcard */*.c)
+HEADERS = $(wildcard *.h)
+SRCS = $(wildcard *.c)
 OBJS = $(patsubst %.c,%.o,$(SRCS))
 
-%.o: %.c $(HEADERS)
+%.o: %.c $(HEADERS) sourcekitd/sourcekitd.h
 	$(CC) -c -o $@ $< $(CFLAGS) $(OTHER_CFLAGS)
 
 $(EXECUTABLE): $(OBJS)
@@ -51,11 +51,12 @@ test: $(EXECUTABLE)
 	python -m unittest discover -s tests
 
 .PHONY: format
-format: $(SRCS)
-	clang-format -i $(SRCS)
+format: $(SRCS) $(HEADERS)
+	clang-format -i $(SRCS) $(HEADERS)
 
 .PHONY: check-format
-check-format: $(SRCS)
+check-format: $(SRCS) $(HEADERS)
 	@which clang-format
-	set -o pipefail; ! clang-format -output-replacements-xml $(SRCS) \
+	set -o pipefail; \
+		! clang-format -output-replacements-xml $(SRCS) $(HEADERS) \
 		| grep "<replacement "
