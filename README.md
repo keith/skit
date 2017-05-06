@@ -64,11 +64,8 @@ see the [protocol documentation][protocol].
 ### [Homebrew](https://brew.sh/)
 
 ```sh
-$ brew install keith/formulae/skit --HEAD
+$ brew install keith/formulae/skit
 ```
-
-NOTE: On macOS the installation is currently tied to your Xcode version,
-so if you move or update Xcode you'll have to reinstall `skit`.
 
 ### [Docker](https://www.docker.com/) ([hub page][hub])
 
@@ -83,24 +80,6 @@ NOTE: The tags for docker line up with the git tags on this repo.
 ```sh
 $ make install
 ```
-
-If you'd like to link against a version of `sourcekit` at a different
-location from the default (based on the default Xcode install on macOS,
-and `/usr/lib` on Linux), you can build manually and provide some
-configuration variables:
-
-```sh
-$ SOURCEKIT_DIRECTORY=/path/to/lib/including/sourcekit make install
-```
-
-Or to just use a different Xcode version (one that is not your default
-set with `xcode-select`):
-
-```sh
-$ XCODE_PATH=/path/to/Xcode.app/Contents/Developer make install
-```
-
-See the `Makefile` for more configuration options.
 
 ## Resources
 
