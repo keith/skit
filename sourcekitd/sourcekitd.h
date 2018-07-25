@@ -70,7 +70,7 @@
 # define SOURCEKITD_HAS_BLOCKS 0
 #endif
 
-#ifdef __GNUC__
+#if defined(__clang__) || defined(__GNUC__)
 # define SOURCEKITD_WARN_RESULT __attribute__((__warn_unused_result__))
 # define SOURCEKITD_NONNULL1 __attribute__((__nonnull__(1)))
 # define SOURCEKITD_NONNULL2 __attribute__((__nonnull__(2)))
@@ -351,7 +351,7 @@ SOURCEKITD_PUBLIC SOURCEKITD_NONNULL1 SOURCEKITD_WARN_RESULT
 sourcekitd_variant_t
 sourcekitd_response_get_value(sourcekitd_response_t resp);
 
-SOURCEKITD_PUBLIC SOURCEKITD_NONNULL_ALL SOURCEKITD_WARN_RESULT
+SOURCEKITD_PUBLIC SOURCEKITD_WARN_RESULT
 sourcekitd_variant_type_t
 sourcekitd_variant_get_type(sourcekitd_variant_t obj);
 
