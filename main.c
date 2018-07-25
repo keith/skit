@@ -7,7 +7,7 @@
 #include <string.h>
 
 char *error_from_response(sourcekitd_response_t resp);
-int perform_sourcekit_request_from_yamlfile(char *filepath);
+bool perform_sourcekit_request_from_yamlfile(char *filepath);
 
 char *error_from_response(sourcekitd_response_t resp) {
   switch (skit_sourcekitd_response_error_get_kind(resp)) {
@@ -22,7 +22,7 @@ char *error_from_response(sourcekitd_response_t resp) {
   }
 }
 
-int perform_sourcekit_request_from_yamlfile(char *filepath) {
+bool perform_sourcekit_request_from_yamlfile(char *filepath) {
   char *yaml = copy_file_contents(filepath);
   char *error = NULL;
   sourcekitd_object_t request =
@@ -39,7 +39,7 @@ int perform_sourcekit_request_from_yamlfile(char *filepath) {
       fprintf(stderr, "sourcekitd failed to create request silently\n");
     }
 
-    return 1;
+    return false;
   }
 
   sourcekitd_response_t response = skit_sourcekitd_send_request_sync(request);
@@ -48,7 +48,7 @@ int perform_sourcekit_request_from_yamlfile(char *filepath) {
             error_from_response(response));
     skit_sourcekitd_response_dispose(response);
 
-    return 1;
+    return false;
   }
 
   sourcekitd_variant_t value = skit_sourcekitd_response_get_value(response);
@@ -58,7 +58,7 @@ int perform_sourcekit_request_from_yamlfile(char *filepath) {
   skit_sourcekitd_response_dispose(response);
   free(json);
 
-  return 0;
+  return true;
 }
 
 int main(int argc, char **argv) {
@@ -80,8 +80,8 @@ int main(int argc, char **argv) {
 
   load_sourcekit_symbols();
   skit_sourcekitd_initialize();
-  int result = perform_sourcekit_request_from_yamlfile(filepath);
+  bool failed = perform_sourcekit_request_from_yamlfile(filepath);
   skit_sourcekitd_shutdown();
 
-  return result;
+  return failed ? 1 : 0;
 }
