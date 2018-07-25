@@ -64,18 +64,18 @@ bool perform_sourcekit_request_from_yamlfile(char *filepath) {
 int main(int argc, char **argv) {
   if (argc != 2) {
     fprintf(stderr, "Usage: skit [YAMLFILE|-v|--version]\n");
-    return 1;
+    return EXIT_FAILURE;
   }
 
   if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
     printf("0.2.0\n");
-    return 0;
+    return EXIT_SUCCESS;
   }
 
   char *filepath = argv[1];
   if (!file_readable(filepath)) {
     fprintf(stderr, "No readable file exists at '%s'\n", filepath);
-    return 1;
+    return EXIT_FAILURE;
   }
 
   load_sourcekit_symbols();
@@ -83,5 +83,5 @@ int main(int argc, char **argv) {
   bool failed = perform_sourcekit_request_from_yamlfile(filepath);
   skit_sourcekitd_shutdown();
 
-  return failed ? 1 : 0;
+  return failed ? EXIT_FAILURE : EXIT_SUCCESS;
 }
