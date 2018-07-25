@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
   }
 
   if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
-    printf("0.2.0\n");
+    printf("0.3.0\n");
     return EXIT_SUCCESS;
   }
 
