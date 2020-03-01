@@ -1,6 +1,4 @@
-FROM norionomura/sourcekit:311
-
-RUN apt-get -y update && apt-get -y install build-essential clang
+FROM swift:5.1.4
 
 COPY . /code/skit
 WORKDIR /code/skit
