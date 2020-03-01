@@ -13,7 +13,7 @@
 // and then check for errors
 #define BIND(symbol)                                                           \
   *(void **)(&skit_##symbol) = dlsym(handle, #symbol);                         \
-  check_dlerror();
+  check_dlerror()
 
 char *copy_xcode_select_sourcekit_path(void);
 char *sourcekit_binary_path(void);
